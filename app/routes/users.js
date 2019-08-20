@@ -11,8 +11,6 @@ module.exports = app => {
             for(let i=0; i < documents.docs.length; i++)
             {
                 let doc = extractUser(documents.docs[i]);
-                console.log(doc);
-                console.log(req.body.Nick);
                 if(doc.Nick == req.body.Nick && doc.Password == req.body.Password)
                 {
                     user = doc;
