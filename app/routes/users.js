@@ -4,14 +4,14 @@ module.exports = app => {
     const usersCollection = db.collection("users");
 
     app.post('/users-management/user-login', async (req, res) => {
-        if(req.body != undefined)
+        if(req.body)
         {
             const documents = await usersCollection.get();
             let user = null;
             for(let i=0; i < documents.docs.length; i++)
             {
                 let doc = extractUser(documents.docs[i]);
-                if(doc.Name == req.body.Name && doc.Password == req.body.Password)
+                if(doc.Email == req.body.Email && doc.Password == req.body.Password)
                 {
                     user = doc;
                     break;
