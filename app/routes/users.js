@@ -11,9 +11,7 @@ module.exports = app => {
             for(let i=0; i < documents.docs.length; i++)
             {
                 let doc = extractUser(documents.docs[i]);
-                console.log(doc);
-                console.log(req.body.Nick);
-                if(doc.Nick == req.body.Nick && doc.Password == req.body.Password)
+                if(doc.Name == req.body.Name && doc.Password == req.body.Password)
                 {
                     user = doc;
                     break;
@@ -24,7 +22,7 @@ module.exports = app => {
             {
                 res.send({
                     user:{
-                        Nick: user.Nick,
+                        Name: user.Name,
                     }
                 })
             }
@@ -37,11 +35,12 @@ module.exports = app => {
         }    
     })
 
-    app.post("/users-management/user-signup", async (req,res) => {
+    app.post("/users-management/user-register", async (req,res) => {
         if(req.body)
         {
             let user = {
-                "Nick": req.body.Nick,
+                "Name": req.body.Name,
+                "Email": req.body.Email,
                 "Password": req.body.Password, 
             }
             const firebaseReturn = await usersCollection.add(user);
@@ -60,7 +59,8 @@ module.exports = app => {
         let user = doc.data();
         return{
             id: doc.id,
-            Nick: user.Nick,
+            Name: user.Name,
+            Email: user.Email,
             Password: user.Password
         }
     }
