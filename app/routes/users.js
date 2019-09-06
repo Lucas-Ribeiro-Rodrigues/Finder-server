@@ -21,9 +21,7 @@ module.exports = app => {
             if(user)
             {
                 res.send({
-                    user:{
-                        Name: user.Name,
-                    }
+                    Name: user.Name,
                 })
             }
             else
