@@ -59,6 +59,27 @@ module.exports = app => {
         if(email)
         {
             /* pesquisar no firebase as infos */
+            const documents = await usersCollection.get();
+            let user = null;
+            for(let i=0; i < documents.docs.length; i++)
+            {
+                let doc = extractUser(documents.docs[i]);
+                if(doc.Email == email)
+                {
+                    user = doc;
+                    break;
+                }
+            }
+
+            if(user)
+            {
+                res.send({
+                    Name: user.Name,
+                    Email: user.Email
+                })
+            }
+            else
+                res.status(500).send("Usuário não encontrado");
             
         }
         else
