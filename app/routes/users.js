@@ -53,6 +53,20 @@ module.exports = app => {
         }
     })
 
+    app.get("/users-management/user/{email}", async (req,res) => {
+        
+        let email = req.params.email;
+        if(email)
+        {
+            /* pesquisar no firebase as infos */
+            
+        }
+        else
+        {
+            res.status(406).send("request body not found");
+        }
+    })
+
     const extractUser = (doc) => {
         let user = doc.data();
         return{
