@@ -53,8 +53,7 @@ module.exports = app => {
         }
     })
 
-    app.get("/users-management/user/{email}", async (req,res) => {
-        
+    app.get("/users-management/user/:email", async (req,res) => {
         let email = req.params.email;
         if(email)
         {
@@ -73,6 +72,7 @@ module.exports = app => {
 
             if(user)
             {
+                console.log('user entrou');
                 res.send({
                     Name: user.Name,
                     Email: user.Email
@@ -98,3 +98,12 @@ module.exports = app => {
         }
     }
 }
+/*
+Mensagens para status
+200: tudo OK
+201: criado
+400: sua requisição tem algum problema
+404: o conteúdo que você pediu não foi encontrado
+500: deu um problema no nosso servidor
+503: serviço inoperante
+*/
