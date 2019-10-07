@@ -43,7 +43,7 @@ module.exports = app => {
             }
             const firebaseReturn = await usersCollection.add(user);
             if(firebaseReturn)
-                res.send(`Vaga ${firebaseReturn.id} adicionada com sucesso`);
+                res.send(`Usuario cadastrado com sucesso`);
             else
                 res.status(500).send("Erro ao cadastrar usuario");
         }
