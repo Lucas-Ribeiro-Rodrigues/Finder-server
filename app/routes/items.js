@@ -7,7 +7,7 @@ module.exports = app => {
     app.post("/items-management/item-register", async (req,res) => {
         if(req.body)
         {
-            let situation = req.body.situation;
+            let situation = req.body.Situation;
             let itemsCollection;
 
             if(situation == "Lost")
