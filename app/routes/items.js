@@ -50,6 +50,16 @@ module.exports = app => {
         }
     })
 
+    app.get("/items-management/items", async (req,res) => {
+        const lostItemsCollection = await db.collection("lostItems");
+        const foundItemsCollection = await db.collection("foundItems");
+        let lostItems = extractObjsFromDocuments((await lostItemsCollection.get()).docs);
+        let foundItems = extractObjsFromDocuments((await foundItemsCollection.get()).docs);
+        let items =  [];
+        items = items.concat(lostItems, foundItems);
+        res.send(items);
+    })
+
     const extractObjsFromDocuments = (documents) =>
     {
         let ret = [];
