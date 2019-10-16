@@ -24,7 +24,7 @@ module.exports = app => {
             }
 
             const firebaseReturn = await itemsCollection.add(req.body);    
-            const trackedItems   = this.trackItem(req.body, this.extractObjsFromDocuments(await searchCollection.get()));
+            const trackedItems   = trackItem(req.body, extractObjsFromDocuments((await searchCollection.get()).docs));
 
             if(firebaseReturn)
                 res.send({trackedItems: trackedItems});
@@ -93,8 +93,8 @@ module.exports = app => {
 
             if(item.Location && element.Location)
             {
-                let isInRange = isInRange(item.Location, element.Location, 200);
-                if(!isInRange) //se for um animal, pode estar à mais de 200m de distância do local onde se perdeu
+                let inRange = isInRange(item.Location, element.Location, 200);
+                if(!inRange) //se for um animal, pode estar à mais de 200m de distância do local onde se perdeu
                 {
                     if(item.Category != 'Animal')    
                         return false;
@@ -116,16 +116,14 @@ module.exports = app => {
                 delete itemCopy.Date;
             }
 
-            let itemProperties = Object.keys(itemCopy);
-            for(const prop of itemProperties)
+            for(let prop in itemCopy)
             {
                 if(itemCopy[prop] === element[prop])
                     similarity++;
                 
                 weightsSum++;
             }
-
-            return similarity >= weightsSum * 0.7;
+            return similarity >= parseInt(weightsSum * 0.7);
         })
     }
 
