@@ -101,9 +101,9 @@ module.exports = app => {
                 }
                 else
                 {
-                    similarity += 3;
+                    similarity += 5;
                 }
-                weightsSum += 3;
+                weightsSum += 5;
                 delete itemCopy.Location;
             }
 
@@ -127,11 +127,16 @@ module.exports = app => {
         })
     }
 
-    function isInRange(point, center, radius) //coordenadas do ponto a ser verificado, do ponto de referência (centro) e do raio em que o item deve estar
-    {
-        let latitudeDistance = ((point.latitude - center.latitude)/60) * 1857; //de graus para milhas náuticas e depois para metros
-        let longitudeDistance = ((point.longitude - center.longitude)/60) * 1857; //de graus para milhas náuticas e depois para metros
-        let distance = Math.sqrt(Math.pow(latitudeDistance, 2) + Math.pow(longitudeDistance, 2));
-        return distance <= radius;
+    /*calcula a distância entre os dois itens usando a fórmula de Haversine e verifica se o ponto está dentro de um raio do centro*/ 
+    function isInRange(point, center, radius){ 
+        var earthRadius = 6378.137; // raio da terra em KM
+        var dLat = point.latitude * Math.PI / 180 - center.latitude * Math.PI / 180;
+        var dLon = point.longitude * Math.PI / 180 - center.longitude * Math.PI / 180;
+        var a = Math.pow(Math.sin(dLat/2), 2) + 
+                Math.cos(point.latitude * Math.PI / 180) * Math.cos(center.latitude * Math.PI / 180) *
+                Math.pow(Math.sin(dLon/2), 2);
+        var arcsin = Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        var distance = earthRadius * 2 * arcsin * 1000;
+        return distance<=radius;
     }
 }
