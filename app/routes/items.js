@@ -78,6 +78,7 @@ module.exports = app => {
         return ret;
     }
 
+    /*filtra os itens que são similares ao item buscado e retorna-os ordenados por ordem decrescente de similaridade*/
     const trackItem = (item, items) => {
         return items.filter((element) => {
             let similarity = 0; //grau de similaridade do elemento com o item
@@ -123,8 +124,14 @@ module.exports = app => {
                 
                 weightsSum++;
             }
+            element["Similarity"] = similarity;
             return similarity >= parseInt(weightsSum * 0.7);
-        })
+        }).sort((a,b) => {
+            if(a.Similarity < b.Similarity)
+                return 1; // ordenar em ordem decrescente;
+            else
+                return -1;
+        });
     }
 
     /*calcula a distância entre os dois itens usando a fórmula de Haversine e verifica se o ponto está dentro de um raio do centro*/ 
