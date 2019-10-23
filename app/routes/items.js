@@ -37,6 +37,16 @@ module.exports = app => {
         }
     });
 
+    app.get("/items-management/items", async (req,res) => {
+        const lostItemsCollection = await db.collection("lostItems");
+        const foundItemsCollection = await db.collection("foundItems");
+        let lostItems = extractObjsFromDocuments((await lostItemsCollection.get()).docs);
+        let foundItems = extractObjsFromDocuments((await foundItemsCollection.get()).docs);
+        let items =  [];
+        items = items.concat(lostItems, foundItems);
+        res.send(items);
+    })
+
     app.get("/items-management/items/:situation", async (req,res) => {
         let situation = req.params.situation;
         if(situation)
@@ -58,14 +68,18 @@ module.exports = app => {
         }
     })
 
-    app.get("/items-management/items", async (req,res) => {
-        const lostItemsCollection = await db.collection("lostItems");
-        const foundItemsCollection = await db.collection("foundItems");
-        let lostItems = extractObjsFromDocuments((await lostItemsCollection.get()).docs);
-        let foundItems = extractObjsFromDocuments((await foundItemsCollection.get()).docs);
-        let items =  [];
-        items = items.concat(lostItems, foundItems);
-        res.send(items);
+    app.get("/items-management/user-items/:userEmail", async (req,res) => {
+        if(req.params.userEmail)
+        {
+            const lostItemsCollection = await db.collection("lostItems");
+            let lostItems = extractObjsFromDocuments((await lostItemsCollection.get()).docs);
+            lostItems.filter(element => {
+                return element.User === req.params.userEmail
+            })
+            res.send(lostItems);
+        }
+        else
+            res.status(406).send("Missing request parameters")
     })
 
     const extractObjsFromDocuments = (documents) =>
