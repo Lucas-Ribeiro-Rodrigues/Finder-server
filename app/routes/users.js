@@ -22,6 +22,7 @@ module.exports = app => {
             {
                 res.send({
                     Name: user.Name,
+                    Email: user.Email
                 })
             }
             else
