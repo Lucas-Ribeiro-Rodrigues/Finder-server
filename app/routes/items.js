@@ -73,10 +73,21 @@ module.exports = app => {
         {
             const lostItemsCollection = await db.collection("lostItems");
             let lostItems = extractObjsFromDocuments((await lostItemsCollection.get()).docs);
-            lostItems.filter(element => {
+            res.send(lostItems.filter(element => {
                 return element.User === req.params.userEmail
-            })
-            res.send(lostItems);
+            }));
+        }
+        else
+            res.status(406).send("Missing request parameters")
+    })
+
+    app.post("/items-management/items-tracking", async (req,res) => {
+        if(req.body)
+        {
+            const itemToTrack = req.body;
+            const foundItemsCollection = await db.collection("foundItems");
+            let   foundItems = extractObjsFromDocuments((await foundItemsCollection.get()).docs);
+            res.send(trackItem(itemToTrack, foundItems));
         }
         else
             res.status(406).send("Missing request parameters")
@@ -104,7 +115,8 @@ module.exports = app => {
             if(item.Category != element.Category || item.Subcategory != element.Subcategory)
                 return false;
 
-            delete itemCopy.Category, itemCopy.Subcategory;
+            delete itemCopy.Category;
+            delete itemCopy.Subcategory;
 
             if(item.Location && element.Location)
             {
@@ -131,8 +143,14 @@ module.exports = app => {
                 delete itemCopy.Date;
             }
 
+            delete itemCopy.Situation;
+            delete itemCopy.User;
+
             for(let prop in itemCopy)
             {
+                if(!element[prop] || !itemCopy[prop])
+                    continue;
+
                 if(itemCopy[prop] === element[prop])
                     similarity++;
                 
