@@ -117,7 +117,10 @@ module.exports = app => {
 
             delete itemCopy.Category;
             delete itemCopy.Subcategory;
-
+            delete itemCopy.Situation;
+            delete itemCopy.User;
+            delete itemCopy.Image;
+            
             if(item.Location && element.Location)
             {
                 let inRange = isInRange(item.Location, element.Location, 200);
@@ -142,9 +145,6 @@ module.exports = app => {
                 weightsSum += 2;
                 delete itemCopy.Date;
             }
-
-            delete itemCopy.Situation;
-            delete itemCopy.User;
 
             for(let prop in itemCopy)
             {
