@@ -8,10 +8,14 @@ module.exports = app => {
         {
             const documents = await usersCollection.get();
             let user = null;
+            let reqEmail = req.body.Email.toUpperCase().replace(" ", "");
+            let reqPassword = req.body.Password.toUpperCase();
             for(let i=0; i < documents.docs.length; i++)
             {
                 let doc = extractUser(documents.docs[i]);
-                if(doc.Email == req.body.Email && doc.Password == req.body.Password)
+                console.log("req: " + reqEmail + " doc: " + doc.Email.toUpperCase());
+                console.log(reqEmail == doc.Email.toUpperCase());
+                if(doc.Email.toUpperCase() == reqEmail && doc.Password.toUpperCase() == reqPassword)
                 {
                     user = doc;
                     break;
@@ -39,7 +43,7 @@ module.exports = app => {
         {
             let user = {
                 "Name": req.body.Name,
-                "Email": req.body.Email,
+                "Email": req.body.Email.replace(" ", ""),
                 "Password": req.body.Password, 
             }
             const firebaseReturn = await usersCollection.add(user);
